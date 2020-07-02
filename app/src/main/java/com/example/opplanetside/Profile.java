@@ -25,7 +25,10 @@ public class Profile extends AppCompatActivity {
 
 
     public RequestQueue queue;
-    TextView textView;
+    TextView lastLogin;
+    TextView name;
+    TextView balance;
+    TextView level;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +36,11 @@ public class Profile extends AppCompatActivity {
         this.queue = Volley.newRequestQueue(this);
 
         Button button = findViewById(R.id.testButton);
-        textView = findViewById(R.id.profileName);
+        name = findViewById(R.id.profileName);
+        lastLogin = findViewById(R.id.profileLastLogin);
+        balance = findViewById(R.id.profileBalance);
+        level = findViewById(R.id.profileLevel);
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -56,8 +63,21 @@ public class Profile extends AppCompatActivity {
             public void onResponse(JSONObject response) {
 
                 try {
+                    JSONArray jsonArray = (JSONArray) response.get("character_list");
+                    JSONObject jsonObject = (JSONObject) jsonArray.get(0);
 
-                    System.out.println((JSONArray) response.get("character_list"));
+                    String stringName = jsonObject.getJSONObject("name").get("first").toString();
+                    String stringLevel = jsonObject.getJSONObject("battle_rank").get("value").toString();
+                    String stringBalance = jsonObject.getJSONObject("certs").get("available_points").toString();
+                    String stringLastLogin = jsonObject.getJSONObject("times").get("last_login_date").toString();
+
+                    name.setText(stringName);
+                    level.setText("Battle rank: " + stringLevel);
+                    balance.setText("Certs: " + stringBalance);
+                    lastLogin.setText("Last login: " + stringLastLogin);
+
+                    
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

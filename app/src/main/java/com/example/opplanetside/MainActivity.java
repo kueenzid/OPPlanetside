@@ -15,6 +15,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
@@ -48,7 +50,22 @@ TextView textView;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                textView.setText(response.toString());
+                try {
+                    JSONArray jsonArray = response.getJSONArray("result");
+                    JSONObject jsonObject = (JSONObject) jsonArray.get(0);
+
+
+                    int popVS = (int) jsonObject.get("vs");
+                    int popNC = (int) jsonObject.get("nc");
+                    int popTR = (int) jsonObject.get("tr");
+                    int popNS = (int) jsonObject.get("ns");
+                    int pop = popNC + popNS + popTR + popVS;
+
+                    textView.setText(Integer.toString(pop) + " players are online!");
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }, new Response.ErrorListener() {
             @Override
