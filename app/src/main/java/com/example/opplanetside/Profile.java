@@ -4,8 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -19,7 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
+import java.util.Vector;
 
 public class Profile extends AppCompatActivity {
 
@@ -29,25 +28,26 @@ public class Profile extends AppCompatActivity {
     TextView name;
     TextView balance;
     TextView level;
+    public String stringFriendName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile2);
         this.queue = Volley.newRequestQueue(this);
 
-        Button button = findViewById(R.id.testButton);
         name = findViewById(R.id.profileName);
         lastLogin = findViewById(R.id.profileLastLogin);
         balance = findViewById(R.id.profileBalance);
         level = findViewById(R.id.profileLevel);
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openProfileFriend();
-            }
-        });
+   //     button.setOnClickListener(new View.OnClickListener() {
+    //        @Override
+    //        public void onClick(View view) {
+    //            openProfileFriend();
+    //        }
+    //    });
         getStats();
+        getfriends();
     }
 
     public void openProfileFriend(){
@@ -76,7 +76,6 @@ public class Profile extends AppCompatActivity {
                     balance.setText("Certs: " + stringBalance);
                     lastLogin.setText("Last login: " + stringLastLogin);
 
-                    
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -90,4 +89,69 @@ public class Profile extends AppCompatActivity {
         });
         this.queue.add(jsonObjectRequest);
     }
-}
+
+    public void getfriends(){
+        String url = "http://census.daybreakgames.com/s:dennosdemain/get/ps2:v2/character/?character_id=5428690458388482097&c:resolve=friends";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                try {
+                    JSONArray jsonArray = (JSONArray) response.get("character_list");
+                    JSONObject jsonObject = (JSONObject) jsonArray.get(0);
+
+                    JSONArray jsonArray2 = jsonObject.getJSONArray("friend_list");
+                    LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
+
+                    for(int i = 0; i < jsonArray2.length(); i++){
+                        JSONObject jsonObject2 = (JSONObject) jsonArray2.get(i);
+                        String friendId = jsonObject2.get("character_id").toString();
+
+                        TextView textView = new TextView(Profile.this);
+                        textView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                        textView.setId(i);
+                        textView.isClickable();
+                        textView.setText("Loading");
+                        linearLayout.addView(textView);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                System.out.println("RIP");
+            }
+        });
+        this.queue.add(jsonObjectRequest);
+    }
+    public String getNames(String id) {
+
+            String url = "http://census.daybreakgames.com/s:dennosdemain/get/ps2:v2/character/?character_id=" + id;
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+
+                    try {
+                        JSONArray jsonArray = (JSONArray) response.get("character_list");
+                        JSONObject jsonObject = (JSONObject) jsonArray.get(0);
+                        stringFriendName = jsonObject.getJSONObject("name").get("first").toString();
+
+
+                        System.out.println(stringFriendName);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    System.out.println("RIP");
+                }
+            });
+            this.queue.add(jsonObjectRequest);
+            System.out.println(stringFriendName + "1");
+            return stringFriendName;
+        }
+    }
