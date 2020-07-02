@@ -28,6 +28,8 @@ public class Profile extends AppCompatActivity {
     TextView name;
     TextView balance;
     TextView level;
+    Vector<TextView> vectorTextView;
+    Vector<String> vectorFriendsName;
     public String stringFriendName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,15 +41,11 @@ public class Profile extends AppCompatActivity {
         lastLogin = findViewById(R.id.profileLastLogin);
         balance = findViewById(R.id.profileBalance);
         level = findViewById(R.id.profileLevel);
-
-   //     button.setOnClickListener(new View.OnClickListener() {
-    //        @Override
-    //        public void onClick(View view) {
-    //            openProfileFriend();
-    //        }
-    //    });
+        vectorTextView = new Vector<>();
+        vectorFriendsName = new Vector<>();
         getStats();
         getfriends();
+        System.out.println(vectorFriendsName);
     }
 
     public void openProfileFriend(){
@@ -111,8 +109,12 @@ public class Profile extends AppCompatActivity {
                         textView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                         textView.setId(i);
                         textView.isClickable();
+                        getNames(friendId);
                         textView.setText("Loading");
                         linearLayout.addView(textView);
+                        vectorTextView.add(textView);
+
+
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -126,7 +128,7 @@ public class Profile extends AppCompatActivity {
         });
         this.queue.add(jsonObjectRequest);
     }
-    public String getNames(String id) {
+    public void getNames(String id) {
 
             String url = "http://census.daybreakgames.com/s:dennosdemain/get/ps2:v2/character/?character_id=" + id;
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -138,8 +140,9 @@ public class Profile extends AppCompatActivity {
                         JSONObject jsonObject = (JSONObject) jsonArray.get(0);
                         stringFriendName = jsonObject.getJSONObject("name").get("first").toString();
 
-
                         System.out.println(stringFriendName);
+
+                        vectorFriendsName.add(stringFriendName);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -151,7 +154,5 @@ public class Profile extends AppCompatActivity {
                 }
             });
             this.queue.add(jsonObjectRequest);
-            System.out.println(stringFriendName + "1");
-            return stringFriendName;
         }
     }
