@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,6 +22,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Vector;
 
 public class Profile extends AppCompatActivity {
@@ -32,6 +37,9 @@ public class Profile extends AppCompatActivity {
     Vector<TextView> vectorTextView;
     Vector<String> vectorFriendsName;
     public String stringFriendName;
+    private Timer timer;
+    private TimerTask timerTask;
+    private Handler handler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,28 +55,26 @@ public class Profile extends AppCompatActivity {
         getStats();
         getfriends();
 
-        runOnUiThread(new Runnable() {
+
+
+
+        new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                new java.util.Timer().schedule(
-                        new java.util.TimerTask() {
-                            @Override
-                            public void run() {
-                                for(int i = 0; i < vectorFriendsName.size(); i++){
-                                    vectorTextView.get(i).setText(vectorFriendsName.get(i));
-                                    System.out.println(vectorFriendsName.size());
-                                    System.out.println(vectorTextView.size());
-                                }
-                            }
-                        },
-                        5000
-                );
+                runOnUiThread(new TimerTask() {
+                    @Override
+                    public void run() {
+                        for(int i = 0; i < vectorFriendsName.size(); i++){
+                            vectorTextView.get(i).setText(vectorFriendsName.get(i));
+                            System.out.println(vectorFriendsName.size());
+                            System.out.println(vectorTextView.size());
+                        }
+                    }
+                });
             }
-        });
+        }, 0, 5000);
 
-
-
-    }
+}
 
     public void openProfileFriend(){
  Intent intent = new Intent(this, Profilefriend.class);
@@ -134,6 +140,12 @@ public class Profile extends AppCompatActivity {
                         getNames(friendId);
                         textView.setText("Loading");
                         linearLayout.addView(textView);
+                        textView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                
+                            }
+                        });
                         vectorTextView.add(textView);
 
 
