@@ -56,14 +56,7 @@ public class Profile extends AppCompatActivity {
         button = findViewById(R.id.button);
         suchFeld.clearFocus();
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), Profilefriend.class);
-                intent.putExtra("name", suchFeld.getText().toString());
-                startActivity(intent);
-            }
-        });
+
         name = findViewById(R.id.profileName);
         lastLogin = findViewById(R.id.profileLastLogin);
         balance = findViewById(R.id.profileBalance);
@@ -72,6 +65,7 @@ public class Profile extends AppCompatActivity {
         vectorFriendsName = new Vector<>();
         getStats();
         getfriends();
+
 
 
         new Timer().scheduleAtFixedRate(new TimerTask() {
@@ -83,6 +77,7 @@ public class Profile extends AppCompatActivity {
                         for(int i = 0; i < vectorFriendsName.size(); i++){
                             vectorTextView.get(i).setText(vectorFriendsName.get(i));
                         }
+
                     }
                 });
             }

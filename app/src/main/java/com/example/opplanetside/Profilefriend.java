@@ -48,12 +48,7 @@ public class Profilefriend extends AppCompatActivity {
                 openHome();
             }
         });
-        getStats(friendId);
-
-    }
-
-    public void getStats(String id){
-        String url = "http://census.daybreakgames.com/s:dennosdemain/get/ps2:v2/character/?name.first_lower=" + id;
+        String url = "http://census.daybreakgames.com/s:dennosdemain/get/ps2:v2/character/?name.first_lower=" + friendId;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -84,7 +79,9 @@ public class Profilefriend extends AppCompatActivity {
             }
         });
         this.queue.add(jsonObjectRequest);
+
     }
+
 
     public void openHome(){
         Intent intent = new Intent(this, MainActivity.class);
