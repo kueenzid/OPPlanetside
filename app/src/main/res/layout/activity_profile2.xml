@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Profile">
+    tools:context=".Profile"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <TextView
         android:id="@+id/profileName"
@@ -42,7 +44,7 @@
         android:id="@+id/profileLastLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="68dp"
+        android:layout_marginBottom="88dp"
         android:text="Last Login"
         app:layout_constraintBottom_toTopOf="@+id/firendlist"
         app:layout_constraintEnd_toEndOf="parent"
@@ -66,4 +68,36 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Freund suchen:"
+        app:layout_constraintBottom_toTopOf="@+id/firendlist"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/profileLastLogin" />
+
+    <EditText
+        android:id="@+id/suchFeld"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/firendlist"
+        app:layout_constraintStart_toEndOf="@+id/textView5"
+        app:layout_constraintTop_toTopOf="@+id/profileLastLogin"
+        app:layout_constraintVertical_bias="0.483" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Suchen"
+        app:layout_constraintBottom_toTopOf="@+id/firendlist"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/suchFeld"
+        app:layout_constraintTop_toTopOf="@+id/profileLastLogin" />
 </androidx.constraintlayout.widget.ConstraintLayout>
