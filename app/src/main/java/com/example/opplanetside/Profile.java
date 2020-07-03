@@ -17,6 +17,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.Vector;
 
@@ -45,7 +46,28 @@ public class Profile extends AppCompatActivity {
         vectorFriendsName = new Vector<>();
         getStats();
         getfriends();
-        System.out.println(vectorFriendsName);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                new java.util.Timer().schedule(
+                        new java.util.TimerTask() {
+                            @Override
+                            public void run() {
+                                for(int i = 0; i < vectorFriendsName.size(); i++){
+                                    vectorTextView.get(i).setText(vectorFriendsName.get(i));
+                                    System.out.println(vectorFriendsName.size());
+                                    System.out.println(vectorTextView.size());
+                                }
+                            }
+                        },
+                        5000
+                );
+            }
+        });
+
+
+
     }
 
     public void openProfileFriend(){
@@ -116,6 +138,7 @@ public class Profile extends AppCompatActivity {
 
 
                     }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
